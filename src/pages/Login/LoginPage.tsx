@@ -6,7 +6,7 @@ import { poppins } from '../../styles/typography';
 import styles from './LoginPage.module.css';
 
 interface LoginPageProps {
-  onLoginSuccess: () => void;
+  onLogin: (email: string, password: string) => Promise<void>;
 }
 
 interface FormErrors {
@@ -34,12 +34,14 @@ function validate(email: string, password: string): FormErrors {
   return errors;
 }
 
-export function LoginPage({ onLoginSuccess }: LoginPageProps) {
+export function LoginPage({ onLogin }: LoginPageProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<FormErrors>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const validationErrors = validate(email, password);
@@ -49,12 +51,24 @@ export function LoginPage({ onLoginSuccess }: LoginPageProps) {
       return;
     }
 
-    // TODO: call the authentication API here.
-    onLoginSuccess();
+    setSubmitError(null);
+    setIsSubmitting(true);
+
+    try {
+      await onLogin(email.trim(), password);
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'A aparut o eroare neasteptata.';
+      setSubmitError(message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleEmailChange = (value: string) => {
     setEmail(value);
+    if (submitError) {
+      setSubmitError(null);
+    }
     if (errors.email) {
       setErrors((current) => ({ ...current, email: undefined }));
     }
@@ -62,6 +76,9 @@ export function LoginPage({ onLoginSuccess }: LoginPageProps) {
 
   const handlePasswordChange = (value: string) => {
     setPassword(value);
+    if (submitError) {
+      setSubmitError(null);
+    }
     if (errors.password) {
       setErrors((current) => ({ ...current, password: undefined }));
     }
@@ -95,8 +112,18 @@ export function LoginPage({ onLoginSuccess }: LoginPageProps) {
         </div>
 
         <div className={styles.buttonWrapper}>
-          <PrimaryButton text="Login" onTap={() => undefined} />
+          <PrimaryButton
+            text="Login"
+            isLoading={isSubmitting}
+            onTap={() => undefined}
+          />
         </div>
+
+        {submitError && (
+          <p className={styles.submitError} style={poppins.regular(12)}>
+            {submitError}
+          </p>
+        )}
       </form>
     </main>
   );
