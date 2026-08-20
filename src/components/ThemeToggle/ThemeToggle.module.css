@@ -1,0 +1,17 @@
+.toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: none;
+  background-color: var(--surface-card);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.toggle:hover {
+  opacity: 0.8;
+}

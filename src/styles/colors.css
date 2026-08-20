@@ -1,0 +1,27 @@
+:root {
+  --bg-primary: #0B0F14;
+  --surface-card: #151A21;
+  --text-primary: #E8EBEF;
+
+  --text-secondary: #8B95A1;
+  --blue-primary: #2E6ADB;
+  --blue-secondary: #4A90D9;
+  --yellow-badge: #E8A33D;
+  --red-badge: #D9392E;
+  --green-badge: #3FA66B;
+  --offline: #8B95A1;
+  --meteo: #5B7C99;
+
+  --light-green: #1B998B;
+  --light-red: #D8263E;
+  --content-secondary: #91909B;
+  --bottom-sheet-line: #D5D6D8;
+  --field-secondary: #F5F5F5;
+  --field-text-secondary: #91909B;
+}
+
+html[data-theme="light"] {
+  --bg-primary: #F7F8FA;
+  --surface-card: #FFFFFF;
+  --text-primary: #12161C;
+}

@@ -1,0 +1,87 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 100%;
+}
+
+.fieldContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 54px;
+  padding: 0 16px;
+  background-color: var(--field-secondary);
+  border: 1px solid var(--field-secondary);
+  border-radius: 4px;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.fieldContainer.editing {
+  background-color: #ffffff;
+  border-color: #000000;
+}
+
+.fieldContainer.errorBorder {
+  border-color: var(--light-red);
+}
+
+.fieldContainer.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  color: #000000;
+  flex-shrink: 0;
+}
+
+.inputArea {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.placeholder {
+  position: absolute;
+  left: 0;
+  color: var(--field-text-secondary);
+  pointer-events: none;
+  transform-origin: left center;
+  transition: transform 0.15s ease, top 0.15s ease;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.placeholder.floating {
+  top: 8px;
+  transform: translateY(0);
+}
+
+.input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #000000;
+  padding-top: 12px;
+}
+
+.trailingIcon {
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  color: #000000;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.error {
+  color: var(--light-red);
+}

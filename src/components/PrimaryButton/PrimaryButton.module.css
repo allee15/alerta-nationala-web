@@ -1,0 +1,43 @@
+.button {
+  height: 48px;
+  width: 100%;
+  border: none;
+  background-color: var(--blue-primary);
+  border-top-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+  border-top-right-radius: 0;
+  border-bottom-left-radius: 0;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.button:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.button.disabled {
+  background-color: var(--offline);
+  cursor: not-allowed;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+}
+
+.text {
+  color: var(--text-primary);
+  flex: 1;
+  text-align: center;
+}
