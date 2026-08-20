@@ -1,23 +1,126 @@
 .page {
   min-height: 100vh;
-  display: grid;
-  place-items: center;
-  padding: 32px 24px;
+  width: 100%;
+  padding: 0;
   box-sizing: border-box;
   background: var(--bg-primary);
 }
 
-.content {
-  width: min(100%, 615px);
-  color: var(--text-primary);
+.shell {
+  display: flex;
+  min-height: 100vh;
+  overflow: hidden;
+  background: var(--bg-primary);
 }
 
-.content p {
-  margin: 12px 0 0;
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 240px;
+  background: var(--surface-card);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 20px 16px;
+  box-sizing: border-box;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-primary);
+  padding: 0 8px;
+  margin-bottom: 28px;
+}
+
+.navigation {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--text-secondary);
+  text-align: left;
+  cursor: pointer;
+}
+
+.navItemActive {
+  background: var(--blue-primary);
+  color: #ffffff;
+}
+
+.newAlertAction {
+  margin-top: 16px;
+}
+
+.sidebarBottom {
+  margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.logoutButton {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 8px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  text-align: left;
+}
+
+.themeRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px;
+}
+
+.themeLabel {
   color: var(--text-secondary);
 }
 
-.actions {
-  margin-top: 20px;
-  max-width: 240px;
+.content {
+  flex: 1;
+  padding: 32px 40px;
+  color: var(--text-primary);
+}
+
+.title {
+  margin: 0 0 8px;
+}
+
+.subtitle {
+  margin: 0;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 900px) {
+  .shell {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .content {
+    padding: 24px 20px;
+  }
 }

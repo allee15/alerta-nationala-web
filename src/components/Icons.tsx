@@ -61,3 +61,32 @@ export function SunIcon(props: IconProps) {
 export function MoonIcon(props: IconProps) {
   return <BaseIcon {...props}><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3 6.7 6.7 0 0 0 21 12.8Z" /></BaseIcon>;
 }
+
+export function AlertTriangleIcon(props: IconProps) {
+  return (
+    <BaseIcon {...props}>
+      <path d="m10.29 3.86-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.71-3.14l-8-14a2 2 0 0 0-3.42 0Z" />
+      <path d="M12 9v4" />
+      <path d="M12 17h.01" />
+    </BaseIcon>
+  );
+}
+
+export function HomeIcon(props: IconProps) {
+  return (
+    <BaseIcon {...props}>
+      <path d="m3 10.5 9-7 9 7" />
+      <path d="M5 9.8V20h14V9.8" />
+    </BaseIcon>
+  );
+}
+
+export function LogoutIcon(props: IconProps) {
+  return (
+    <BaseIcon {...props}>
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+      <path d="m16 17 5-5-5-5" />
+      <path d="M21 12H9" />
+    </BaseIcon>
+  );
+}

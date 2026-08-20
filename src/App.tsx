@@ -2,12 +2,19 @@ import { useEffect, useState } from 'react';
 import { HomePage } from './pages/Home/HomePage';
 import { LoginPage } from './pages/Login/LoginPage';
 import {
+  AUTH_SESSION_EXPIRED_EVENT,
   clearAuthTokens,
   getAuthTokens,
   login,
   logout,
   refresh,
 } from './services/auth';
+
+const AUTHENTICATED_ROUTES = ['/home', '/zones', '/alerts/new'] as const;
+
+function isAuthenticatedRoute(path: string): path is (typeof AUTHENTICATED_ROUTES)[number] {
+  return AUTHENTICATED_ROUTES.includes(path as (typeof AUTHENTICATED_ROUTES)[number]);
+}
 
 function App() {
   const [pathname, setPathname] = useState(() => window.location.pathname);
@@ -16,8 +23,26 @@ function App() {
 
   useEffect(() => {
     const handlePopState = () => setPathname(window.location.pathname);
+    const handleSessionExpired = () => {
+      setIsAuthenticated(false);
+      navigate('/');
+    };
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key === 'auth_tokens' && !event.newValue) {
+        setIsAuthenticated(false);
+        navigate('/');
+      }
+    };
+
     window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+    window.addEventListener(AUTH_SESSION_EXPIRED_EVENT, handleSessionExpired);
+    window.addEventListener('storage', handleStorage);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+      window.removeEventListener(AUTH_SESSION_EXPIRED_EVENT, handleSessionExpired);
+      window.removeEventListener('storage', handleStorage);
+    };
   }, []);
 
   const navigate = (path: string) => {
@@ -64,7 +89,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (!isBootstrapping && pathname === '/home' && !isAuthenticated) {
+    if (!isBootstrapping && isAuthenticatedRoute(pathname) && !isAuthenticated) {
       navigate('/');
     }
   }, [isAuthenticated, isBootstrapping, pathname]);
@@ -85,8 +110,19 @@ function App() {
     return null;
   }
 
-  if (pathname === '/home' && isAuthenticated) {
-    return <HomePage onLogout={handleLogout} />;
+  if (isAuthenticated && isAuthenticatedRoute(pathname)) {
+    return (
+      <HomePage
+        currentPath={pathname}
+        onNavigate={navigate}
+        onLogout={handleLogout}
+      />
+    );
+  }
+
+  if (isAuthenticated && pathname === '/') {
+    navigate('/home');
+    return null;
   }
 
   return <LoginPage onLogin={handleLogin} />;

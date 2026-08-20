@@ -1,4 +1,5 @@
 const AUTH_STORAGE_KEY = 'auth_tokens';
+export const AUTH_SESSION_EXPIRED_EVENT = 'auth:session-expired';
 
 const DEFAULT_API_BASE_URL = 'https://alerta-nationala-backend.vercel.app';
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL ?? DEFAULT_API_BASE_URL).replace(/\/+$/, '');
@@ -22,6 +23,8 @@ class ApiError extends Error {
     this.status = status;
   }
 }
+
+let refreshInFlight: Promise<AuthTokens> | null = null;
 
 function buildUrl(path: string): string {
   return API_BASE_URL ? `${API_BASE_URL}${path}` : path;
@@ -84,13 +87,15 @@ function normalizeTokens(payload: unknown): AuthTokens | null {
 }
 
 async function request(path: string, options: RequestInit): Promise<unknown> {
+  const headers = new Headers(options.headers);
+  if (options.body && !headers.has('Content-Type')) {
+    headers.set('Content-Type', 'application/json');
+  }
+
   const response = await fetch(buildUrl(path), {
     credentials: 'include',
     ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...(options.headers ?? {}),
-    },
+    headers,
   });
 
   const rawBody = await response.text();
@@ -102,6 +107,15 @@ async function request(path: string, options: RequestInit): Promise<unknown> {
   }
 
   return payload;
+}
+
+function toApiError(payload: unknown, status: number): ApiError {
+  const fallbackMessage = `Request failed with status ${status}.`;
+  return new ApiError(extractErrorMessage(payload) ?? fallbackMessage, status);
+}
+
+function notifySessionExpired(): void {
+  window.dispatchEvent(new Event(AUTH_SESSION_EXPIRED_EVENT));
 }
 
 function ensureTokens(payload: unknown): AuthTokens {
@@ -129,6 +143,76 @@ export function saveAuthTokens(tokens: AuthTokens): void {
 
 export function clearAuthTokens(): void {
   localStorage.removeItem(AUTH_STORAGE_KEY);
+}
+
+async function refreshOnce(): Promise<AuthTokens> {
+  if (!refreshInFlight) {
+    refreshInFlight = refresh().finally(() => {
+      refreshInFlight = null;
+    });
+  }
+
+  return refreshInFlight;
+}
+
+export async function authRequest<TResponse = unknown>(
+  path: string,
+  options: RequestInit = {},
+): Promise<TResponse> {
+  const callApi = async (accessToken: string | null) => {
+    const headers = new Headers(options.headers);
+    if (options.body && !headers.has('Content-Type')) {
+      headers.set('Content-Type', 'application/json');
+    }
+    if (accessToken) {
+      headers.set('Authorization', `Bearer ${accessToken}`);
+    }
+
+    const response = await fetch(buildUrl(path), {
+      credentials: 'include',
+      ...options,
+      headers,
+    });
+
+    const rawBody = await response.text();
+    const payload = rawBody ? parseJson(rawBody) : null;
+
+    return { response, payload };
+  };
+
+  const initialTokens = getAuthTokens();
+  const firstAttempt = await callApi(initialTokens?.accessToken ?? null);
+
+  if (firstAttempt.response.ok) {
+    return firstAttempt.payload as TResponse;
+  }
+
+  if (firstAttempt.response.status !== 401) {
+    throw toApiError(firstAttempt.payload, firstAttempt.response.status);
+  }
+
+  try {
+    await refreshOnce();
+  } catch {
+    clearAuthTokens();
+    notifySessionExpired();
+    throw new Error('Sesiunea a expirat. Te rugam sa te autentifici din nou.');
+  }
+
+  const refreshedTokens = getAuthTokens();
+  const secondAttempt = await callApi(refreshedTokens?.accessToken ?? null);
+
+  if (secondAttempt.response.ok) {
+    return secondAttempt.payload as TResponse;
+  }
+
+  if (secondAttempt.response.status === 401) {
+    clearAuthTokens();
+    notifySessionExpired();
+    throw new Error('Sesiunea a expirat. Te rugam sa te autentifici din nou.');
+  }
+
+  throw toApiError(secondAttempt.payload, secondAttempt.response.status);
 }
 
 export async function login(credentials: Credentials): Promise<AuthTokens> {
