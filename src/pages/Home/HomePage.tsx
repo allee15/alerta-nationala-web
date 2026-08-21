@@ -7,6 +7,8 @@ import {
   MapPinIcon,
 } from '../../components/Icons';
 import { ThemeToggle } from '../../components/ThemeToggle/ThemeToggle';
+import { AlertsList } from '../../components/Alerts/AlertsList';
+import { AlertForm } from '../../components/Alerts/AlertForm';
 import styles from './HomePage.module.css';
 
 interface HomePageProps {
@@ -21,10 +23,10 @@ export function HomePage({ onLogout, currentPath, onNavigate }: HomePageProps) {
   const activeSection: HomeSection =
     currentPath === '/zones' ? 'zones' : currentPath === '/alerts/new' ? 'new-alert' : 'alerts';
 
-  const contentBySection: Record<HomeSection, { title: string; subtitle: string }> = {
+  const headerBySection: Record<HomeSection, { title: string; subtitle: string }> = {
     alerts: {
       title: 'Alerte active',
-      subtitle: 'Aici va aparea lista alertelor active si istoricul trimiterilor recente.',
+      subtitle: 'Lista alertelor si rata de confirmare pentru fiecare.',
     },
     zones: {
       title: 'Puncte de adunare',
@@ -32,11 +34,11 @@ export function HomePage({ onLogout, currentPath, onNavigate }: HomePageProps) {
     },
     'new-alert': {
       title: 'Alerta noua',
-      subtitle: 'Aici va fi formularul pentru crearea si trimiterea unei alerte noi.',
+      subtitle: 'Completeaza formularul pentru a emite o alerta catre populatie.',
     },
   };
 
-  const currentContent = contentBySection[activeSection];
+  const currentHeader = headerBySection[activeSection];
 
   return (
     <main className={styles.page}>
@@ -87,11 +89,21 @@ export function HomePage({ onLogout, currentPath, onNavigate }: HomePageProps) {
 
         <section className={styles.content}>
           <h1 style={poppins.semiBold(24)} className={styles.title}>
-            {currentContent.title}
+            {currentHeader.title}
           </h1>
           <p style={poppins.regular(14)} className={styles.subtitle}>
-            {currentContent.subtitle}
+            {currentHeader.subtitle}
           </p>
+
+          {activeSection === 'alerts' && <AlertsList />}
+          {activeSection === 'new-alert' && (
+            <AlertForm onCreated={() => onNavigate('/home')} />
+          )}
+          {activeSection === 'zones' && (
+            <p style={poppins.regular(14)}>
+              Aici vine harta punctelor de adunare (urmatorul pas).
+            </p>
+          )}
         </section>
       </section>
     </main>

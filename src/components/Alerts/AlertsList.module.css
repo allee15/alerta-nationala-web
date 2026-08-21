@@ -1,0 +1,31 @@
+.layout {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 340px;
+  flex-shrink: 0;
+}
+.item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: var(--surface-card);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  color: var(--text-primary);
+}
+.itemActive { border-color: var(--blue-primary); }
+.itemHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; gap: 8px; }
+.itemMessage { color: var(--text-secondary); margin: 0 0 6px; }
+.itemStatus { color: var(--text-secondary); }
+.error { color: var(--red-badge); }

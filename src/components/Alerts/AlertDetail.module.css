@@ -1,0 +1,10 @@
+.panel {
+  flex: 1;
+  background: var(--surface-card);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.action { margin: 12px 0 16px; max-width: 220px; }
+.checkinsList { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; color: var(--text-secondary); }
+.error { color: var(--red-badge); }

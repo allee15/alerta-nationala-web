@@ -1,0 +1,11 @@
+.form { display: flex; flex-direction: column; gap: 14px; max-width: 420px; }
+.label { display: flex; flex-direction: column; gap: 6px; color: var(--text-secondary); }
+.select {
+  background: var(--field-secondary);
+  color: var(--field-text-secondary);
+  border: none;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+}
+.error { color: var(--red-badge); }
