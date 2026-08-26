@@ -1,0 +1,18 @@
+.layout { display: flex; gap: 20px; align-items: flex-start; }
+.mapColumn { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+.hint { color: var(--text-secondary); margin: 0; }
+.error { color: var(--red-badge); }
+.list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.listItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--surface-card);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: var(--text-primary);
+}
+.listSub { color: var(--text-secondary); }
+.listActions { display: flex; gap: 10px; }
+.listActions button { background: none; border: none; color: var(--blue-primary); cursor: pointer; font-size: 13px; }

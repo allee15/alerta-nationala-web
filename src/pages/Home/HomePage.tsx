@@ -10,6 +10,7 @@ import { ThemeToggle } from '../../components/ThemeToggle/ThemeToggle';
 import { AlertsList } from '../../components/Alerts/AlertsList';
 import { AlertForm } from '../../components/Alerts/AlertForm';
 import styles from './HomePage.module.css';
+import { AssemblyPointsManager } from '../../components/AssemblyPoints/AssemblyPointsManager';
 
 interface HomePageProps {
   onLogout: () => Promise<void>;
@@ -99,11 +100,7 @@ export function HomePage({ onLogout, currentPath, onNavigate }: HomePageProps) {
           {activeSection === 'new-alert' && (
             <AlertForm onCreated={() => onNavigate('/home')} />
           )}
-          {activeSection === 'zones' && (
-            <p style={poppins.regular(14)}>
-              Aici vine harta punctelor de adunare (urmatorul pas).
-            </p>
-          )}
+          {activeSection === 'zones' && <AssemblyPointsManager />}
         </section>
       </section>
     </main>
