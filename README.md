@@ -17,6 +17,7 @@ npm run dev
 ```
 Aplicatia porneste implicit pe `http://localhost:5173`.
 
+De asemenea, aplicatia este disponibila si online, la adresa: https://alerta-nationala-web.vercel.app/.
 ### Cont de test (operator)
 Email: alexia.elena.aldea@gmail.com
 Parola: 123456
